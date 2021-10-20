@@ -89,3 +89,30 @@ class location_update(generics.GenericAPIView, mixins.ListModelMixin, mixins.Cre
 
     def delete(self, request, id):
         return self.delete(request, id)
+
+
+class store_product(generics.GenericAPIView,APIView):
+    serializer_class=store_serializers
+    queryset=store.objects.all()
+
+    def filter_product(self,pid):
+        stp=store.objects.filter(product=pid)
+        return stp
+    
+    def get(self,request,pid):
+        str_p=self.filter_product(pid)
+        store=store_serializers(str_p,many=True)
+        return Response(store.data)
+
+class location_store(generics.GenericAPIView,APIView):
+    serializer_class=location_serializers
+    queryset=location.objects.all()
+
+    def filter_product(self,sid):
+        stp=location.objects.filter(store_id=sid)
+        return stp
+    
+    def get(self,request,sid):
+        str_p=self.filter_product(sid)
+        store=store_serializers(str_p,many=True)
+        return Response(store.data)
